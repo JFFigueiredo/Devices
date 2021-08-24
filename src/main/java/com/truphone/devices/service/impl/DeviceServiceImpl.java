@@ -29,7 +29,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     public void deleteDeviceById(long id) {
-        Device existingDevice = deviceRepository.findById(id).orElseThrow(
+        deviceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Device", "Id", id));
         this.deviceRepository.deleteById(id);
     }
@@ -88,12 +88,10 @@ public class DeviceServiceImpl implements DeviceService {
             device.setCreationDate(new Date());
         }
         if (violations.size() > 0) {
-            String violationMessges = "";
             for (ConstraintViolation<Device> violation : violations) {
-                violationMessges = violationMessges + " " + violation.getMessage();
                 System.out.println(violation.getMessage());
             }
-            throw new RuntimeException("Error creating devices " + violationMessges);
+            throw new RuntimeException("Error creating devices ");
         } else
             return this.deviceRepository.save(device);
     }
