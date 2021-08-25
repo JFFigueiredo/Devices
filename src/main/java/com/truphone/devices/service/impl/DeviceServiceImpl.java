@@ -10,6 +10,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +77,13 @@ public class DeviceServiceImpl implements DeviceService {
             existingDevice.setBrand(jsonRequest.get("brand"));
         }
         if (jsonRequest.get("creationDate") != null) {
-            existingDevice.setCreationDate(new Date(jsonRequest.get("creationDate")));
+            //Using ISO8601 format
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            try {
+                existingDevice.setCreationDate(formatter.parse(jsonRequest.get("creationDate")));
+            } catch (ParseException e) {
+                System.out.println(e.getMessage());
+            }
         }
         deviceRepository.save(existingDevice);
         return existingDevice;
